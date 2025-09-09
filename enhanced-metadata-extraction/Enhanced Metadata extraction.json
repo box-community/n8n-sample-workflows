@@ -51,7 +51,8 @@
         "include": "selected",
         "includeTools": [
           "box_metadata_template_get_by_name_tool"
-        ]
+        ],
+        "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
       "typeVersion": 1,
@@ -102,7 +103,8 @@
         "includeTools": [
           "box_search_folder_by_name_tool",
           "box_list_folder_content_by_folder_id"
-        ]
+        ],
+        "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
       "typeVersion": 1,
@@ -124,7 +126,7 @@
         "messages": {
           "values": [
             {
-              "content": "=using template key {{ $json.message.content.template_key }} extract the metadata from file {{ $json.message.content.file_id }}\nprovide the output in json using this sample as an example\n{\n\"template_key\":\"abcd\",\n\"file_id\":\"12345\",\n\"metadata\":{}\n}\nalways include the template_key, file_id, and metadata in the answer"
+              "content": "=using template key {{ $json.message.content.template_key }} extract the metadata from file {{ $json.message.content.file_id }}\nprovide the output in json using this sample as an example\n{\n\"template_key\":\"abcd\",\n\"file_id\":\"12345\",\n\"metadata\":{\"key1\":\"value:\"a\",\"key2\":\"value:\"b\"}\n}\nalways include the template_key, file_id, and metadata in the answer"
             }
           ]
         },
@@ -152,7 +154,8 @@
         "include": "selected",
         "includeTools": [
           "box_ai_extract_structured_enhanced_using_template_tool"
-        ]
+        ],
+        "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
       "typeVersion": 1,
@@ -216,7 +219,8 @@
         "include": "selected",
         "includeTools": [
           "box_metadata_get_instance_on_file_tool"
-        ]
+        ],
+        "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
       "typeVersion": 1,
@@ -242,6 +246,7 @@
             }
           ]
         },
+        "simplify": false,
         "jsonOutput": true,
         "options": {}
       },
@@ -253,13 +258,13 @@
       ],
       "id": "7d6fdf4b-61e1-428b-907c-63bf530052ee",
       "name": "Update Metadata",
+      "retryOnFail": true,
       "credentials": {
         "openAiApi": {
           "id": "0JUtlCL2o7F6kzb0",
           "name": "OpenAi account"
         }
-      },
-      "onError": "continueRegularOutput"
+      }
     },
     {
       "parameters": {
@@ -267,7 +272,8 @@
         "include": "selected",
         "includeTools": [
           "box_metadata_update_instance_on_file_tool"
-        ]
+        ],
+        "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
       "typeVersion": 1,
@@ -324,10 +330,11 @@
         "messages": {
           "values": [
             {
-              "content": "=set metadata on\nfile_id: {{ $json.message.content.file_id }}\n using \ntemplate_key: {{ $json.message.content.template_key }}\n \nmetadata: {{ $json.message.content.metadata.toJsonString() }}"
+              "content": "=set metadata on\nfile_id: {{ $json.message.content.file_id }}\ntemplate_key: {{ $json.message.content.template_key }}\nmetadata: {{ $json.message.content.metadata.toJsonString() }}"
             }
           ]
         },
+        "simplify": false,
         "jsonOutput": true,
         "options": {}
       },
@@ -339,6 +346,7 @@
       ],
       "id": "ec84f684-007b-40e1-be18-ba699ea926b6",
       "name": "Set Metadata",
+      "retryOnFail": true,
       "credentials": {
         "openAiApi": {
           "id": "0JUtlCL2o7F6kzb0",
@@ -353,7 +361,8 @@
         "include": "selected",
         "includeTools": [
           "box_metadata_set_instance_on_file_tool"
-        ]
+        ],
+        "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
       "typeVersion": 1,
@@ -403,7 +412,8 @@
         "include": "selected",
         "includeTools": [
           "box_ai_extract_structured_enhanced_using_template_tool"
-        ]
+        ],
+        "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
       "typeVersion": 1,
@@ -413,9 +423,28 @@
       ],
       "id": "6a8ead4b-befc-47a0-b6c9-1105dc5f192d",
       "name": "MCP Metadata Extract1"
+    },
+    {
+      "parameters": {
+        "command": "echo \"test\" "
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        2000,
+        384
+      ],
+      "id": "bbba7c7c-b4d6-45ad-87e1-64f864684c7c",
+      "name": "Execute Command"
     }
   ],
-  "pinData": {},
+  "pinData": {
+    "When clicking ‘Execute workflow’": [
+      {
+        "json": {}
+      }
+    ]
+  },
   "connections": {
     "When clicking ‘Execute workflow’": {
       "main": [
@@ -588,13 +617,24 @@
           }
         ]
       ]
+    },
+    "Set Metadata": {
+      "main": [
+        [
+          {
+            "node": "Execute Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "d2b025e7-05b4-46e1-8123-cf414a7efee0",
+  "versionId": "188b4625-f111-4aaa-b184-fa978c18776d",
   "meta": {
     "instanceId": "0c7ddbf0a802aa192ef7932e98a7bf66b62ea35f6147e074d94373e93824a8a2"
   },
